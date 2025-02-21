@@ -9,6 +9,10 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "prettier": "^3.5.1",
     "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "three": "^0.173.0"
   }
 }
