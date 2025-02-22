@@ -13,6 +13,7 @@
     "vite": "^6.1.0"
   },
   "dependencies": {
+    "parquetjs-lite": "^0.8.7",
     "three": "^0.173.0"
   }
 }
