@@ -1,0 +1,9 @@
+# ReadMe
+
+### Scripts to gen parquet file
+
+```
+node scripts/10Mpoints_gen.js
+```
+
+The file will be generated in `public/10_000_000points.parquet`.

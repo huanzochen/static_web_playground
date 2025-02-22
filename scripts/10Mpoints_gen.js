@@ -30,4 +30,4 @@ async function generateParquetFile(filename, numPoints) {
 }
 
 
-generateParquetFile("points.parquet", 10_000_000)
+generateParquetFile(`10_000_000points.parquet`, 10_000_000)
