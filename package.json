@@ -13,6 +13,8 @@
     "vite": "^6.1.0"
   },
   "dependencies": {
+    "apache-arrow": "^19.0.1",
+    "parquet-wasm": "^0.6.1",
     "parquetjs-lite": "^0.8.7",
     "three": "^0.173.0"
   }
