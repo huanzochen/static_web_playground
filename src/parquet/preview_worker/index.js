@@ -5,14 +5,17 @@ const worker = new Worker(new URL('./parquetWorker.js', import.meta.url), {
 const page = document.getElementById('page')
 const output = document.getElementById('output')
 
-const PAGE_SIZE = 10_000
+const PAGE_SIZE = 1000
 let offset = 0
 let totalRows
 let table
 
+let autoLoadTimeoutId
+let stopAutoLoad = false
+
 const updateLoadingUI = () => {
   console.log(`正在載入第 ${offset / PAGE_SIZE + 1} 頁...`)
-  output.innerText = `正在載入第 ${offset / PAGE_SIZE + 1} 頁...`
+  output.textContent = `正在載入第 ${offset / PAGE_SIZE + 1} 頁...`
   page.innerText = `第 ${offset / PAGE_SIZE + 1} 頁 `
 }
 
@@ -66,6 +69,16 @@ worker.onmessage = (event) => {
     updateContent(content)
   }
 
+  if (action === 'auto data') {
+    const { content } = event.data
+    updateContent(content)
+    if (!stopAutoLoad) {
+      autoLoadTimeoutId = setTimeout(() => {
+        loadNext()
+      }, 100)
+    }
+  }
+
   if (action === 'error') {
     console.error('worker 讀取失敗:', error)
   }
@@ -85,4 +98,21 @@ document.getElementById('previous').addEventListener('click', () => {
   offset -= PAGE_SIZE
   updateLoadingUI()
   worker.postMessage({ action: 'loadData', offset, PAGE_SIZE })
+})
+
+const loadNext = () => {
+  offset += PAGE_SIZE
+  updateLoadingUI()
+  worker.postMessage({ action: 'autoLoadData', offset, PAGE_SIZE })
+}
+
+document.getElementById('auto_next').addEventListener('click', () => {
+  stopAutoLoad = false
+  loadNext()
+})
+
+document.getElementById('stop_auto').addEventListener('click', () => {
+  stopAutoLoad = true
+  clearTimeout(autoLoadTimeoutId)
+  console.log('auto load stop')
 })

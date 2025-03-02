@@ -53,25 +53,38 @@ self.onmessage = async (event) => {
     const { offset, PAGE_SIZE } = event.data
 
     try {
-      // 逐行讀取 x, y 欄位
-      const rows = []
-      for (
-        let i = offset;
-        i < Math.min(offset + PAGE_SIZE, table.numRows);
-        i++
-      ) {
-        const x = table.getChild('x')?.get(i)
-        const y = table.getChild('y')?.get(i)
-        rows.push({ x, y })
-      }
-
-      console.log('讀取的資料：', rows)
-
-      // 轉換成 JSON 格式再傳回去
-      const content = JSON.stringify(rows, null, 2)
-      postMessage({ action: 'data', content })
+      postMessage({ action: 'data', content: loadNextPage(offset, PAGE_SIZE) })
     } catch (error) {
       postMessage({ action: 'error', error: error.message })
     }
   }
+
+  if (action === 'autoLoadData') {
+    const { offset, PAGE_SIZE } = event.data
+
+    try {
+      postMessage({
+        action: 'auto data',
+        content: loadNextPage(offset, PAGE_SIZE),
+      })
+    } catch (error) {
+      postMessage({ action: 'error', error: error.message })
+    }
+  }
+}
+
+const loadNextPage = (offset, PAGE_SIZE) => {
+  // 逐行讀取 x, y 欄位
+  const rows = []
+  for (let i = offset; i < Math.min(offset + PAGE_SIZE, table.numRows); i++) {
+    const x = table.getChild('x')?.get(i)
+    const y = table.getChild('y')?.get(i)
+    rows.push({ x, y })
+  }
+
+  console.log('讀取的資料：', rows)
+
+  // 轉換成 JSON 格式再傳回去
+  const content = JSON.stringify(rows, null, 2)
+  return content
 }

@@ -14,7 +14,7 @@ const page = document.getElementById('page')
 const output = document.getElementById('output')
 
 let offset = 0
-const pageSize = 1000
+const pageSize = 10_000
 let totalRows
 let table
 
